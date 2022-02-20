@@ -6,10 +6,17 @@ using UnityEngine.SceneManagement;
 public class CrushDetector : MonoBehaviour
 {
     [SerializeField] float loadDelay = 0.5f;
+    [SerializeField] ParticleSystem crushEffect;
+    [SerializeField] AudioClip crushSFX;
+    bool hasCrushed = false;
     void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.tag == "Ground")
+        if (other.tag == "Ground" && !hasCrushed)
         {
+            hasCrushed = true;
+            FindObjectOfType<PlayerComtroller>().DisableControls();
+            crushEffect.Play();
+            GetComponent<AudioSource>().PlayOneShot(crushSFX);
             Invoke("ReloadScene", loadDelay);
         }
         
@@ -19,4 +26,6 @@ public class CrushDetector : MonoBehaviour
     {
         SceneManager.LoadScene(0);
     }
+
+    
 }
